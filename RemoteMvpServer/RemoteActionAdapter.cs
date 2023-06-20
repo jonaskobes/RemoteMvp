@@ -31,7 +31,7 @@ namespace RemoteMvpLib
                 // In this case, we get one IP address of localhost that is IP : 127.0.0.1
                 // If a host has multiple addresses, you will get a list of addresses
                 var host = Dns.GetHostEntry(_host);
-                var ipAddress = host.AddressList[0];
+                var ipAddress = host.AddressList[1];
                 var remoteEP = new IPEndPoint(ipAddress, _port);
 
                 // Create a TCP/IP  socket.
@@ -47,11 +47,11 @@ namespace RemoteMvpLib
                 var msg = Encoding.ASCII.GetBytes(message);
 
                 // Send the data through the socket asynchronously.
-                var bytesSent = await sender.SendAsync(msg);
+                var bytesSent = await sender.SendAsync(msg, SocketFlags.None);
                 Console.WriteLine($"{bytesSent} bytes sent to server. Waiting for response ...");
 
                 // Receive the response from the remote device asynchronously
-                var bytesRec = await sender.ReceiveAsync(buffer);
+                var bytesRec = await sender.ReceiveAsync(buffer, SocketFlags.None);
                 var responseString = Encoding.ASCII.GetString(buffer, 0, bytesRec);
                 Console.WriteLine($"Received {bytesRec} bytes: {responseString}");
 

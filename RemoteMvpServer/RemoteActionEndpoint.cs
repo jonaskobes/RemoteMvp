@@ -18,9 +18,10 @@ namespace RemoteMvpLib
         {
             try
             {
-                _host ??= Dns.GetHostEntry("localhost");
-                _ipAddress = _host.AddressList[0];
+                _host ??= Dns.GetHostEntry("localhost");  // ??=  ist eine Kurzschreibweise und bedeutet, dass _host nur überschrieben wird wenn _host = Null ist. Ansonsten bleibt der Wert von _host bestehen.
+                _ipAddress = _host.AddressList[1];
                 _localEndPoint = new IPEndPoint(_ipAddress, port);
+                //_localEndPoint = new IPEndPoint(IPAddress.Loopback, port);
             }
             catch (Exception e)
             {
@@ -59,7 +60,7 @@ namespace RemoteMvpLib
                     byte[] bytes = new byte[1024];
 
                     Console.WriteLine("Remote client connected! Waiting for data ...");
-                    int bytesRec = await Handler.ReceiveAsync(bytes);
+                    int bytesRec = await Handler.ReceiveAsync(bytes, SocketFlags.None);
 
                     string requestString = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("Text received : {0}", requestString);
